@@ -770,6 +770,32 @@ var _ = Describe("Add", func() {
 			err := appSrv.(*App).createPullRequestToRepo(info, "ssh://git@github.com/ewojfewoj3323w/abc", "hash", []byte{}, []byte{}, []byte{})
 			Expect(err.Error()).To(HavePrefix("failed to retrieve account type"))
 		})
+
+		It("generates no error for user repo", func() {
+			gitProviders.GetAccountTypeStub = func(s string) (gitproviders.ProviderAccountType, error) {
+				return gitproviders.AccountTypeUser, nil
+			}
+			gitProviders.CreatePullRequestToUserRepoStub = func(gitprovider gitprovider.UserRepositoryRef, branch string, hash string, files []gitprovider.CommitFile, commitMessage string, prTitle string, prDescription string) (gitprovider.PullRequest, error) {
+				return &fakePR{}, nil
+			}
+
+			info := getAppResourceInfo(makeWegoApplication(addParams), "cluster")
+			err := appSrv.(*App).createPullRequestToRepo(info, "ssh://git@github.com/ewojfewoj3323w/abc", "hash", []byte{}, []byte{}, []byte{})
+			Expect(err).ShouldNot(HaveOccurred())
+		})
+
+		It("generates no error for org repo", func() {
+			gitProviders.GetAccountTypeStub = func(s string) (gitproviders.ProviderAccountType, error) {
+				return gitproviders.AccountTypeOrg, nil
+			}
+			gitProviders.CreatePullRequestToOrgRepoStub = func(gitprovider gitprovider.OrgRepositoryRef, branch string, hash string, files []gitprovider.CommitFile, commitMessage string, prTitle string, prDescription string) (gitprovider.PullRequest, error) {
+				return &fakePR{}, nil
+			}
+
+			info := getAppResourceInfo(makeWegoApplication(addParams), "cluster")
+			err := appSrv.(*App).createPullRequestToRepo(info, "ssh://git@github.com/ewojfewoj3323w/abc", "hash", []byte{}, []byte{}, []byte{})
+			Expect(err).ShouldNot(HaveOccurred())
+		})
 	})
 
 	Context("when using dry-run", func() {
@@ -909,4 +935,22 @@ var _ = Describe("Test app hash", func() {
 func getHash(inputs ...string) string {
 	final := []byte(strings.Join(inputs, ""))
 	return fmt.Sprintf("%x", md5.Sum(final))
+}
+
+type fakePR struct {
+	prInfo gitprovider.PullRequestInfo
+}
+
+func (fpr *fakePR) APIObject() interface{} {
+	return &fpr.prInfo
+}
+
+func (fpr *fakePR) Get() gitprovider.PullRequestInfo {
+	return testPR()
+}
+
+func testPR() gitprovider.PullRequestInfo {
+	return gitprovider.PullRequestInfo{
+		WebURL: "www.github.com/testrepo/32423",
+	}
 }
