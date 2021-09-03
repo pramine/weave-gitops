@@ -670,7 +670,7 @@ func (a *App) createPullRequestToRepo(info *AppResourceInfo, repo string, appHas
 	}
 
 	if accountType == gitproviders.AccountTypeOrg {
-		orgRepoRef := gitproviders.NewOrgRepositoryRef(string(a.GitProvider.GetProviderName()), owner, repoName)
+		orgRepoRef := gitproviders.NewOrgRepositoryRef(string(a.GitProvider.GetProviderDomain()), owner, repoName)
 		prLink, err := a.GitProvider.CreatePullRequestToOrgRepo(orgRepoRef, info.Spec.Branch, appHash, files, utils.GetCommitMessage(), fmt.Sprintf("wego add %s", info.Name), fmt.Sprintf("Added yamls for %s", info.Name))
 		if err != nil {
 			return fmt.Errorf("unable to create pull request: %w", err)
@@ -679,7 +679,7 @@ func (a *App) createPullRequestToRepo(info *AppResourceInfo, repo string, appHas
 		return nil
 	}
 
-	userRepoRef := gitproviders.NewUserRepositoryRef(string(a.GitProvider.GetProviderName()), owner, repoName)
+	userRepoRef := gitproviders.NewUserRepositoryRef(string(a.GitProvider.GetProviderDomain()), owner, repoName)
 	prLink, err := a.GitProvider.CreatePullRequestToUserRepo(userRepoRef, info.Spec.Branch, appHash, files, utils.GetCommitMessage(), fmt.Sprintf("wego add %s", info.Name), fmt.Sprintf("Added yamls for %s", info.Name))
 	if err != nil {
 		return fmt.Errorf("unable to create pull request: %w", err)
