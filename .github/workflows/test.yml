@@ -210,3 +210,13 @@ jobs:
         go get github.com/onsi/ginkgo/ginkgo
         go get github.com/onsi/gomega/...
         ginkgo --randomizeSuites --reportFile=$(pwd)/test-results/smoke-test-results.xml -v ./test/acceptance/test/...
+  library-integration-test:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run Library Integration Test
+        run: make lib-test
+
+        
