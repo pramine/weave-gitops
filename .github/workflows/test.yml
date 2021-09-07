@@ -98,7 +98,7 @@ jobs:
           path-to-lcov: merged.lcov
     - name: Library Integration Test
       env:
-        GITHUB_TOKEN: "${{ secrets.WEAVE_GITOPS_TEST_WEAVEWORKS_WEAVE_GITOPS_BOT_TOKEN }}"
+        GITHUB_TOKEN: "${{ secrets.github_token }}"
       run: make lib-test
   smoke-tests:
     runs-on: ubuntu-latest
