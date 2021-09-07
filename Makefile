@@ -103,7 +103,9 @@ ui-lib: node_modules dist/index.js dist/index.d.ts
 
 lib-test:
 	docker build -t wego-library-test -f test/library/libtest.dockerfile $(CURRENT_DIR)/test/library
-	docker run -e GITHUB_TOKEN=$$GITHUB_TOKEN -it wego-library-test
+	docker run -e GITHUB_TOKEN=$$GITHUB_TOKEN -it \
+		-v $(CURRENT_DIR):/go/src/github.com/weaveworks/weave-gitops \
+		 wego-library-test
 
 dist/index.js:
 	npm run build:lib && cp package.json dist

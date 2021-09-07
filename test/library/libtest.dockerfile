@@ -1,6 +1,7 @@
 FROM golang:1.16
 RUN apt-get update
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+# Install node.js
 RUN mkdir -p /usr/local/nvm
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION v14.17.0
