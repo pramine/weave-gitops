@@ -84,7 +84,7 @@ func NewApplicationsServer(cfg *ApplicationsConfig) pb.ApplicationsServer {
 }
 
 // DefaultConfig creates a populated config with the dependencies for a Server
-func DefaultConfig() (*ApplicationsConfig, error) {
+func defaultConfig() (*ApplicationsConfig, error) {
 	zapLog, err := zap.NewDevelopment()
 	if err != nil {
 		log.Fatalf("could not create zap logger: %v", err)
