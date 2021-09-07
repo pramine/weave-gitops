@@ -101,6 +101,10 @@ ui-lib: node_modules dist/index.js dist/index.d.ts
 	@find dist -type f -iname \*.otf -delete
 	@find dist -type f -iname \*.woff -delete
 
+lib-test:
+	docker build -t wego-library-test -f test/library/libtest.dockerfile $(CURRENT_DIR)/test/library
+	docker run -e GITHUB_TOKEN=$$GITHUB_TOKEN -it wego-library-test
+
 dist/index.js:
 	npm run build:lib && cp package.json dist
 
